@@ -1,6 +1,8 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
-import {BASE_URL, getPhoto} from './api/webApi'
+import { BASE_URL, getPhoto } from './api/webApi';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 //Переменные
 const formEl = document.querySelector('.search-form');
@@ -28,6 +30,7 @@ async function amountData(searchQueryVal) {
     if (data.hits.length === 0) {
       Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     } 
+    
     data.hits.forEach(photo => createCardMarkup(photo));
   }
   catch(error) {
