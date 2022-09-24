@@ -2,7 +2,7 @@ import './css/styles.css';
 import Notiflix from 'notiflix';
 import { BASE_URL, getPhoto, itemPerPage  } from './api/webApi';
 import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 //Переменные
 const formEl = document.querySelector('.search-form');
@@ -11,6 +11,9 @@ const btnMore = document.querySelector('.load-more')
 btnMore.classList.add('visually-hidden')
 
 let page = 1;
+
+//Открытие модального окна с опциями через библиотеку SimpleLightbox
+const lightbox = new SimpleLightbox('.gallery a');
 
 //Вешаем событие на форму
 formEl.addEventListener('submit', onSubmitForm);
@@ -33,6 +36,7 @@ async function loadMoreCards(searchQueryVal) {
   page += 1;
   const data = await getPhoto(searchQueryVal, page);
   createGalleryMarkup(data.hits);
+  lightbox.refresh();
   
   const totalPages = Math.ceil(data.totalHits / itemPerPage);
   if (page === totalPages) {
@@ -46,6 +50,7 @@ async function loadMoreCards(searchQueryVal) {
 async function amountData(searchQueryVal) {
   try {
     const data = await getPhoto(searchQueryVal);
+    console.log(data.hits);
     // data = response.data
     btnMore.classList.remove('visually-hidden');
     
@@ -57,6 +62,7 @@ async function amountData(searchQueryVal) {
       Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     } 
     createGalleryMarkup(data.hits);
+    lightbox.refresh();
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
   }
   catch(error) {
@@ -66,8 +72,11 @@ async function amountData(searchQueryVal) {
 
 //Функция создающая разметку
 function createGalleryMarkup(cardsArr) {
-  const markup = cardsArr.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `<a class="gallery__item" href="${largeImageURL}">
+  const markup = cardsArr.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `
+  <div class="photo-card">
+  <a href="${largeImageURL}">
   <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+  </a>
   <div class="info">
     <p class="info-item">
       <b>Likes:</b><span>${likes}</span>
@@ -81,7 +90,8 @@ function createGalleryMarkup(cardsArr) {
     <p class="info-item">
       <b>Downloads: ${downloads}</b>
     </p>
-</div></a>`)
+</div>
+</div>`)
     .join('');
   
   galleryEl.insertAdjacentHTML('beforeend', markup);
@@ -93,5 +103,3 @@ function clearMarkup(element) {
   element.innerHTML = '';
 };
 
-//Открытие модального окна с опциями через библиотеку SimpleLightbox
-const lightbox = new SimpleLightbox(".gallery a");
