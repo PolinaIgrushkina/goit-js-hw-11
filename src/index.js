@@ -11,7 +11,7 @@ const btnMore = document.querySelector('.load-more')
 btnMore.classList.add('visually-hidden')
 
 let page = 1;
-
+    
 //Открытие модального окна с опциями через библиотеку SimpleLightbox
 const lightbox = new SimpleLightbox('.gallery a');
 
@@ -25,7 +25,11 @@ function onSubmitForm(event) {
   clearMarkup(galleryEl);
 
   const { searchQuery } = event.currentTarget.elements;
-  const searchQueryVal = searchQuery.value;
+  const searchQueryVal = searchQuery.value.trim();
+
+  if (!searchQueryVal) {
+    return;
+  }
 
   amountData(searchQueryVal);
 
