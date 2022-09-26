@@ -21,7 +21,7 @@ export async function getPhoto(search, page) {
     return responce.data;
   }
   catch(error) {
-    Notiflix.Notify.failure(error.message);
+    throw new Error(error);
   }
 };
 

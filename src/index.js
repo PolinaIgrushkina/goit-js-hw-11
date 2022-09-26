@@ -69,7 +69,6 @@ async function amountData(searchQueryVal) {
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
   }
   catch (error) {
-    throw new Error(error);
     Notiflix.Notify.failure(error.message);
   }
 };
