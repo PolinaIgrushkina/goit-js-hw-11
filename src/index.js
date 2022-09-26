@@ -18,6 +18,9 @@ const lightbox = new SimpleLightbox('.gallery a');
 //Вешаем событие на форму
 formEl.addEventListener('submit', onSubmitForm);
 
+//Вешаем событие на кнопку Loadmore
+btnMore.addEventListener('click', loadMoreCards);
+
 //При сабмите формы получаем значение инпута передается агрументов в вызов функции amountData(search)
 function onSubmitForm(event) {
   event.preventDefault();
@@ -57,10 +60,6 @@ async function amountData(searchQueryVal) {
     console.log(data.hits);
     // data = response.data
     btnMore.classList.remove('visually-hidden');
-    
-    btnMore.addEventListener('click', () => {
-      loadMoreCards(searchQueryVal)
-    });
 
     if (data.hits.length === 0) {
       Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
@@ -69,7 +68,8 @@ async function amountData(searchQueryVal) {
     lightbox.refresh();
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
   }
-  catch(error) {
+  catch (error) {
+    throw new Error(error);
     Notiflix.Notify.failure(error.message);
   }
 };
